@@ -349,17 +349,21 @@ MonoBehaviour:
   canJump: 1
   canCrouch: 1
   canUseHeadbob: 1
+  canZoom: 1
   walkBobSpeed: 14
   walkBobAmount: 0.05
   sprintBobSpeed: 18
   sprintBobAmount: 0.11
   crouchBobSpeed: 8
   crouchBobAmount: 0.11
+  timeToZoom: 0.3
+  zoomFOV: 30
   sprintKey: 304
   jumpKey: 32
   crouchKey: 306
-  walkSpeed: 6
-  sprintSpeed: 12
+  zoomKey: 324
+  walkSpeed: 12
+  sprintSpeed: 30
   lookSpeedX: 1
   lookSpeedY: 1
   upperLookLimit: 70
@@ -436,7 +440,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 70
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -822,7 +826,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8707273951532836186}
   m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
-  m_LocalPosition: {x: 200.55, y: 17.2, z: -22.408}
+  m_LocalPosition: {x: 200.55, y: 17.2, z: -458.1}
   m_LocalScale: {x: 723.3417, y: 723.3417, z: 34.795067}
   m_Children: []
   m_Father: {fileID: 543450651876278945}
