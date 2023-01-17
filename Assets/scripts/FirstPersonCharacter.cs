@@ -19,9 +19,9 @@ public class FirstPersonCharacter : MonoBehaviour
 
     [Header("HeadBob Parameter")]
     [SerializeField] private float walkBobSpeed = 14f;
-    [SerializeField] private float walkBobAmount = 0.5f;
+    [SerializeField] private float walkBobAmount = 0.05f;
     [SerializeField] private float sprintBobSpeed = 18f;
-    [SerializeField] private float sprintBobAmount = 1f;
+    [SerializeField] private float sprintBobAmount = 0.11f;
     [SerializeField] private float crouchBobSpeed = 8f;
     [SerializeField] private float crouchBobAmount = 0.25f;
     private float defaulYPos = 0;
@@ -40,7 +40,7 @@ public class FirstPersonCharacter : MonoBehaviour
     [Header("Look Parameters")]
     [SerializeField, Range(1, 10)] private float lookSpeedX = 2.0f;
     [SerializeField, Range(1, 10)] private float lookSpeedY = 2.0f;
-    [SerializeField, Range(1, 180)] private float upperLookLimit  = 80.0f;
+    [SerializeField, Range(1, 180)] private float upperLookLimit = 80.0f;
     [SerializeField, Range(1, 180)] private float lowerLookLimit = 80.0f;
 
     [Header("Jumping Parameters")]
@@ -82,8 +82,8 @@ public class FirstPersonCharacter : MonoBehaviour
             HandleMovementInput();
             HandleMouseLook();
 
-            if(canJump)
-            HandleJump();
+            if (canJump)
+                HandleJump();
 
             if (canCrouch)
                 HandleCrouch();
@@ -100,21 +100,34 @@ public class FirstPersonCharacter : MonoBehaviour
     {
         if (!characterController.isGrounded) return;
 
-        
+        if (Mathf.Abs(moveDirection.x) > 0.1f || Mathf.Abs(moveDirection.z) > 0.1f)
+        {
+            timer += Time.deltaTime * (isCrouching ? crouchBobSpeed : IsSprinting ? sprintBobSpeed : walkBobSpeed);
+            playerCamera.transform.localPosition = new Vector3(
+                playerCamera.transform.localPosition.x,
+                defaulYPos + Mathf.Sin(timer) * (isCrouching ? crouchBobAmount : IsSprinting ? sprintBobAmount : walkBobAmount),
+                playerCamera.transform.localPosition.z);
+        }
+
+           
+
     }
+
+
+
+
+
     private void HandleCrouch()
     {
         if (ShouldCrouch)
             StartCoroutine(CrouchStand());
     }
-
-
-
     private void HandleJump()
     {
         if (ShouldJump)
             moveDirection.y = jumpForce;
     }
+
 
 
 
@@ -125,7 +138,6 @@ public class FirstPersonCharacter : MonoBehaviour
         moveDirection = (transform.TransformDirection(Vector3.forward) * currentInput.x) + (transform.TransformDirection(Vector3.right) * currentInput.y);
         moveDirection.y = moveDirectionY;
     }
-
     private void HandleMouseLook()
     {
         rotationX -= Input.GetAxis("Mouse Y") * lookSpeedY;
