@@ -24,8 +24,7 @@ public class DoorRayCast : MonoBehaviour
         RaycastHit hit;
         Vector3 fwd = transform.TransformDirection(Vector3.forward);
 
-        int mask = 1 << LayerMask.NameToLayer(excludeLayerName) | layerMaskInteract.value;
-        if (Physics.Raycast(transform.position, fwd, out hit, rayLength, mask))
+        if (Physics.Raycast(transform.position, fwd, out hit, rayLength, layerMaskInteract))
         {
             if (hit.collider.CompareTag(interactableTag))
             {
