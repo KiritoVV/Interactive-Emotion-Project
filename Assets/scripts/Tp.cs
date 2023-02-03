@@ -12,7 +12,7 @@ public class Tp : MonoBehaviour
     public bool LogoRotate = false;
 
     public GameObject Cutscene;
-    public Transform Logo;
+    //public Transform Logo;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -48,7 +48,7 @@ public class Tp : MonoBehaviour
     {
         if(LogoRotate == true)
         {
-            Logo.localRotation = Quaternion.Euler(0, 0, Time.time * 100f);
+            //Logo.localRotation = Quaternion.Euler(0, 0, Time.time * 100f);
         }
     }
 }
