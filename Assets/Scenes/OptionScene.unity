@@ -894,8 +894,8 @@ MonoBehaviour:
 
     CTRL = Crouch
 
-    E
-    = Interact
+    Left
+    mouse click = pickup key
 
 '
   m_isRightToLeft: 0
