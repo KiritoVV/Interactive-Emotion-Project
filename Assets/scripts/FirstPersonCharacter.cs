@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -17,6 +18,7 @@ public class FirstPersonCharacter : MonoBehaviour
     [SerializeField] private bool canCrouch = true;
     [SerializeField] private bool canUseHeadbob = true;
     [SerializeField] private bool canZoom = true;
+    [SerializeField] private bool useStamina = true;
 
 
     [Header("HeadBob Parameter")]
@@ -29,7 +31,7 @@ public class FirstPersonCharacter : MonoBehaviour
     private float defaulYPos = 0;
     private float timer;
 
-    [Header("Zoom Paraemters")]
+    [Header("Zoom Parameter")]
     [SerializeField] private float timeToZoom = 0.3f;
     [SerializeField] private float zoomFOV = 30f;
     private float defaultFOV;
@@ -42,7 +44,7 @@ public class FirstPersonCharacter : MonoBehaviour
     [SerializeField] private KeyCode zoomKey = KeyCode.Mouse1;
 
 
-    [Header("Movement Parameters")]
+    [Header("Movement Parameter")]
     [SerializeField] private float walkSpeed = 3.0f;
     [SerializeField] private float sprintSpeed = 6.0f;
 
@@ -52,11 +54,11 @@ public class FirstPersonCharacter : MonoBehaviour
     [SerializeField, Range(1, 180)] private float upperLookLimit = 80.0f;
     [SerializeField, Range(1, 180)] private float lowerLookLimit = 80.0f;
 
-    [Header("Jumping Parameters")]
+    [Header("Jumping Parameter")]
     [SerializeField] private float jumpForce = 8.0f;
     [SerializeField] private float gravity = 30.0f;
 
-    [Header("Crouch Parameters")]
+    [Header("Crouch Parameter")]
     [SerializeField] private float crouchHeight = 0.5f;
     [SerializeField] private float standingHeight = 2f;
     [SerializeField] private float timeToCrouch = 0.25f;
@@ -64,6 +66,16 @@ public class FirstPersonCharacter : MonoBehaviour
     [SerializeField] private Vector3 standingCenter = new Vector3(0, 0, 0);
     private bool isCrouching;
     private bool duringCrouchAnimation;
+
+    [Header("Stamina Parameter")]
+    [SerializeField] private float maxStamina = 100;
+    [SerializeField] private float staminaUseMultiplier = 5;
+    [SerializeField] private float timeBeforeStaminaRegenStarts = 5;
+    [SerializeField] private float staminaValueIncrement = 2;
+    [SerializeField] private float staminaTimeIncrement = 0.1f;
+    private float currentStamina;
+    private Coroutine regeneratingStamina;
+    public static Action<float> OnStaminaChange;
 
 
     private Camera playerCamera;
@@ -82,6 +94,7 @@ public class FirstPersonCharacter : MonoBehaviour
         characterController = GetComponent<CharacterController>();
         defaulYPos = playerCamera.transform.localPosition.y;
         defaultFOV = playerCamera.fieldOfView;
+        currentStamina = maxStamina;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
@@ -107,6 +120,9 @@ public class FirstPersonCharacter : MonoBehaviour
             if (canUseHeadbob)
                 HandleHeadbob();
 
+            if (useStamina)
+                HandleStamina();
+
             ApplyFinalMOvements();
 
         }
@@ -127,6 +143,35 @@ public class FirstPersonCharacter : MonoBehaviour
 
            
 
+    }
+
+    private void HandleStamina()
+    {
+        if(IsSprinting && currentInput != Vector2.zero)
+        {
+            
+
+            if(regeneratingStamina != null)
+            {
+                StopCoroutine(regeneratingStamina);
+                regeneratingStamina = null;
+            }
+
+            currentStamina -= staminaUseMultiplier * Time.deltaTime;
+
+            if (currentStamina < 0)
+                currentStamina = 0;
+
+            OnStaminaChange?.Invoke(currentStamina);
+
+            if (currentStamina <= 0)
+                canSprint = false;
+        }
+
+        if(!IsSprinting && currentStamina < maxStamina && regeneratingStamina == null)
+        {
+            regeneratingStamina = StartCoroutine(RegenerateStamina());
+        }
     }
 
     private void HandleZoom()
@@ -229,6 +274,30 @@ public class FirstPersonCharacter : MonoBehaviour
 
         playerCamera.fieldOfView = targetFOV;
         zoomRoutine = null;
+    }
+
+    private IEnumerator RegenerateStamina()
+    {
+        yield return new WaitForSeconds(timeBeforeStaminaRegenStarts);
+        WaitForSeconds timeToWait = new WaitForSeconds(staminaTimeIncrement);
+
+        while(currentStamina <maxStamina)
+        {
+            if (currentStamina > 0)
+                canSprint = true;
+
+            currentStamina += staminaValueIncrement;
+
+            if (currentStamina > maxStamina)
+                currentStamina = maxStamina;
+
+            OnStaminaChange?.Invoke(currentStamina);
+
+
+            yield return timeToWait;
+        }
+
+        regeneratingStamina = null;
     }
 
 }
