@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class LightsFlicker : MonoBehaviour
 {
-    public Light light08;
+    public Light lightOB;
 
     public AudioSource lightSound;
 
@@ -29,7 +29,7 @@ public class LightsFlicker : MonoBehaviour
 
         if(timer <= 0)
         {
-            light08.enabled = !light08.enabled;
+            lightOB.enabled = !lightOB.enabled;
             timer = Random.Range(minTime, maxTime);
             lightSound.Play();
         }
