@@ -14,6 +14,11 @@ public class Monster : MonoBehaviour
     public GameObject Bullets;
     public GameObject Barrel;
 
+    public AudioClip heartbeat;
+    public AudioSource audioSource;
+    public AudioClip Scream;
+    public AudioSource screaming;
+
     public LayerMask whatIsGround, whatIsPlayer;
 
     //Patrolling
@@ -34,6 +39,7 @@ public class Monster : MonoBehaviour
     {
         player = GameObject.Find("FirstPersonCharacter").transform;
         agent = GetComponent<NavMeshAgent>();
+        
     }
 
     private void Update()
@@ -94,6 +100,7 @@ public class Monster : MonoBehaviour
     private void ChasePlayer()
     {
         agent.SetDestination(player.position);
+        audioSource.PlayOneShot(heartbeat, 0.7f);
     }
 
     ///  ATTTACKING  ///
@@ -104,6 +111,8 @@ public class Monster : MonoBehaviour
         agent.SetDestination(transform.position);
 
         transform.LookAt(player);
+
+        screaming.PlayOneShot(Scream, 0.7f);
 
         if (!alreadyAttacked)
         {
@@ -123,4 +132,6 @@ public class Monster : MonoBehaviour
     {
         alreadyAttacked = false;
     }
+
+
 }

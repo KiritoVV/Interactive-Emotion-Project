@@ -12,10 +12,14 @@ public class KillBlock : MonoBehaviour
     {
         if(other.tag == "Player")
         {
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-            SceneManager.LoadScene(0);
+            StartCoroutine(Teleporter());
         }
     }
-    
+    IEnumerator Teleporter()
+    {
+        yield return new WaitForSeconds(10f);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        SceneManager.LoadScene(0);
+    }
 }
