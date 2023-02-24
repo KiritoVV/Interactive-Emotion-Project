@@ -4948,7 +4948,7 @@ MonoBehaviour:
   crouchBobSpeed: 8
   crouchBobAmount: 0.11
   timeToZoom: 0.3
-  zoomFOV: 30
+  zoomFOV: 40
   sprintKey: 304
   jumpKey: 32
   crouchKey: 306
@@ -5373,7 +5373,11 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
+<<<<<<< Updated upstream
   field of view: 85
+=======
+  field of view: 79
+>>>>>>> Stashed changes
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
