@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class LeverScript : MonoBehaviour
@@ -7,6 +8,10 @@ public class LeverScript : MonoBehaviour
     public GameObject interaction_text;
     public GameObject crosshair;
     public Transform lever;
+
+    public FinalDoorScript DoorScript;
+
+    public TextMeshProUGUI leverAmount;
 
     private AudioSource leverSFX;
     private bool isPulled;
@@ -16,6 +21,7 @@ public class LeverScript : MonoBehaviour
     {
         leverSFX = GetComponent<AudioSource>();
         interaction_text.SetActive(false);
+        DoorScript = GameObject.Find("ExitDoor").GetComponent<FinalDoorScript>();
     }
 
     // Update is called once per frame
@@ -37,6 +43,10 @@ public class LeverScript : MonoBehaviour
                     isPulled = true;
                     leverSFX.Play();
                     lever.Rotate(Time.deltaTime * 0, -60, 0);
+
+                    DoorScript.leveramount += 1;
+
+                    leverAmount.text = (DoorScript.leveramount + "/4");
 
                     interaction_text.SetActive(false);
                 }
